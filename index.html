@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aitor Bal — Architect & 3D Specialist based in Lisbon, Portugal.">
+  <title>Aitor Bal — Architect</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+            sans:  ['DM Sans', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #fff;
+      color: #111;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; }
+
+    /* ── Scrollbar ─────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 2px; }
+    ::-webkit-scrollbar-track { background: #fff; }
+    ::-webkit-scrollbar-thumb { background: #111; }
+
+    /* ── Nav ───────────────────────────────────────────── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 1.6rem 2.5rem;
+      transition: background 0.4s ease, transform 0.4s ease;
+    }
+    #nav.hidden-up { transform: translateY(-100%); }
+    #nav.bg-solid  { background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); box-shadow: 0 1px 0 rgba(0,0,0,0.06); }
+
+    .wordmark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: #111;
+      text-decoration: none;
+      text-transform: lowercase;
+      justify-self: start;
+    }
+
+    /* Centre column: nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    .nav-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #555;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .nav-link:hover { color: #111; }
+
+    /* Right column: CTA */
+    .nav-cta {
+      justify-self: end;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #111;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.25s ease;
+      padding-bottom: 1px;
+    }
+    .nav-cta:hover { border-color: #111; }
+
+    /* Mobile: collapse centre links */
+    #nav-links-wrap { display: flex; }
+    @media (max-width: 640px) {
+      #nav { grid-template-columns: 1fr auto; }
+      #nav-links-wrap { display: none; }
+      .nav-cta { display: none; }
+    }
+
+    /* ── Shared label style ────────────────────────────── */
+    .lbl {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    /* ── Scroll reveals ────────────────────────────────── */
+    .sr {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .sr.in { opacity: 1; transform: none; }
+    .sr-fade { opacity: 0; transition: opacity 1s ease; }
+    .sr-fade.in { opacity: 1; }
+
+    /* ── HERO ──────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .hero-lines {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    /* Hero content: centred both axes */
+    .hero-content {
+      position: absolute; inset: 0; z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 2rem;
+      gap: 0;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(5rem, 14vw, 13rem);
+      font-weight: 400;
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: #111;
+    }
+    .hero-title em { font-style: italic; }
+    .hero-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #666;
+      margin-top: 2rem;
+    }
+    /* Scroll hint at bottom of hero */
+    .hero-scroll {
+      position: absolute; bottom: 2.25rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase; color: #aaa;
+    }
+    .hero-scroll-line {
+      width: 1px; height: 3rem;
+      background: linear-gradient(to bottom, #aaa, transparent);
+      animation: drip 1.8s ease-in-out infinite;
+    }
+    @keyframes drip {
+      0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+      50%  { opacity: 1; transform: scaleY(1); transform-origin: top; }
+      100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; }
+    }
+
+    /* ── Decorative line accent (reusable) ────────────── */
+    .line-accent {
+      display: block;
+      width: 3rem; height: 1px;
+      background: #ccc;
+      margin: 2rem auto 0;
+    }
+
+    /* ── STATEMENT ─────────────────────────────────────── */
+    #statement {
+      padding: 9rem 2.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .statement-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4.5vw, 3.75rem);
+      font-weight: 300;
+      line-height: 1.22;
+      letter-spacing: -0.01em;
+      color: #111;
+    }
+    .statement-text em { font-style: italic; }
+
+    /* ── SECTION LABEL ROW ─────────────────────────────── */
+    .sec-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 0 2.5rem 3rem;
+      border-top: 1px solid #e8e8e8;
+      padding-top: 2rem;
+    }
+
+    /* ── PROJECT GRID ──────────────────────────────────── */
+    #work { padding-bottom: 8rem; }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 5px;
+      padding: 0 2.5rem;
+    }
+
+    .proj-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: #f5f4f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2.5rem 2rem;
+      transition: background 0.4s ease;
+    }
+    .proj-card:hover { background: #edecea; }
+
+    /* Column spans */
+    .proj-card.c7  { grid-column: span 7; min-height: 420px; }
+    .proj-card.c5  { grid-column: span 5; min-height: 340px; }
+    .proj-card.c4  { grid-column: span 4; min-height: 300px; }
+
+    /* Always-visible text info */
+    .proj-overlay-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 300;
+      color: #111;
+      line-height: 1.1;
+    }
+    .proj-card.c7 .proj-overlay-name { font-size: 2.5rem; }
+    .proj-overlay-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.63rem;
+      letter-spacing: 0.18em;
+      color: #888;
+      margin-top: 0.4rem;
+      text-transform: uppercase;
+    }
+    .proj-overlay-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: #aaa; margin-top: 1rem;
+      transition: color 0.3s ease;
+    }
+    .proj-card:hover .proj-overlay-cta { color: #111; }
+    .proj-overlay-cta::after {
+      content: ''; display: inline-block;
+      width: 1.5rem; height: 1px; background: currentColor;
+      transition: width 0.3s ease;
+    }
+    .proj-card:hover .proj-overlay-cta::after { width: 2.5rem; }
+
+    /* Ghost number watermark */
+    .proj-ghost-num {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(6rem, 14vw, 11rem); font-weight: 400;
+      color: rgba(17,17,17,0.05);
+      line-height: 1; pointer-events: none; user-select: none;
+      white-space: nowrap;
+    }
+
+    /* Responsive: collapse to 2-col then 1-col */
+    @media (max-width: 900px) {
+      .proj-grid { grid-template-columns: repeat(2, 1fr); padding: 0 1.5rem; }
+      .proj-card.c7, .proj-card.c5,
+      .proj-card.c4 { grid-column: span 1; min-height: 240px; }
+    }
+    @media (max-width: 540px) {
+      .proj-grid { grid-template-columns: 1fr; }
+      .proj-card.c7, .proj-card.c5, .proj-card.c4 { min-height: 200px; }
+    }
+
+    /* ── ABOUT ─────────────────────────────────────────── */
+    #about { padding-bottom: 8rem; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .about-img-wrap {
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      position: relative;
+    }
+    .about-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(15%);
+      transition: filter 0.7s ease, transform 0.9s ease;
+    }
+    .about-img-wrap:hover img { filter: grayscale(0%); transform: scale(1.03); }
+
+    .about-text {
+      padding: 4rem 3.5rem 4rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .about-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 300;
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      color: #111;
+      margin-bottom: 2.25rem;
+    }
+    .about-heading em { font-style: italic; }
+    .about-body p {
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: #555;
+      margin-bottom: 1.1rem;
+    }
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid #e8e8e8;
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.75rem;
+      font-weight: 300;
+      color: #111;
+      line-height: 1;
+    }
+    .stat-lbl { margin-top: 0.3rem; }
+
+    /* ── CONTACT ───────────────────────────────────────── */
+    #contact { padding-bottom: 8rem; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 5rem;
+      padding: 0 2.5rem;
+    }
+    .contact-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: #111;
+      margin-bottom: 3rem;
+    }
+    .contact-heading em { font-style: italic; }
+    .contact-detail { margin-bottom: 2.25rem; }
+    .contact-detail-lbl { margin-bottom: 0.4rem; }
+    .contact-detail-val {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: #555;
+    }
+    .contact-detail-val a {
+      color: #555;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .contact-detail-val a:hover { color: #111; }
+
+    .social-row { display: flex; gap: 1.75rem; flex-wrap: wrap; }
+    .social-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #999;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .social-link:hover { color: #111; }
+
+    /* quote */
+    .blockquote {
+      margin-top: 4rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid #e8e8e8;
+    }
+    .blockquote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.5;
+      color: #888;
+    }
+    .blockquote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #bbb;
+      font-style: normal;
+    }
+
+    /* ── FORM ──────────────────────────────────────────── */
+    .form-field {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #ddd;
+      padding: 0.9rem 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: #111;
+      outline: none;
+      transition: border-color 0.3s ease;
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+    .form-field:focus { border-color: #111; }
+    .form-field::placeholder { color: #bbb; letter-spacing: 0.02em; }
+    .form-group { margin-bottom: 2rem; }
+    .form-group label {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 0.35rem;
+    }
+    .submit-btn {
+      margin-top: 1.5rem;
+      display: inline-flex; align-items: center; gap: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #fff;
+      background: #111;
+      border: 1px solid #111;
+      padding: 1rem 2.25rem;
+      cursor: pointer;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+    .submit-btn:hover { background: #fff; color: #111; }
+    .submit-btn .arr {
+      display: inline-block;
+      width: 1.25rem; height: 1px;
+      background: currentColor;
+      transition: width 0.35s ease;
+    }
+    .submit-btn:hover .arr { width: 2rem; }
+
+    /* ── SERVICES / LESSONS ────────────────────────────── */
+    #services { padding-bottom: 8rem; }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: #e8e8e8;  /* gap colour */
+      border: 1px solid #e8e8e8;
+      margin: 0 2.5rem;
+    }
+    .service-card {
+      background: #fff;
+      padding: 3rem 2.5rem 3.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: background 0.3s ease;
+    }
+    .service-card:hover { background: #fafaf8; }
+
+    .service-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #ccc;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.75rem;
+    }
+    .service-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 300;
+      line-height: 1.15;
+      color: #111;
+      margin-bottom: 1.25rem;
+    }
+    .service-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: #777;
+      flex: 1;
+    }
+    .service-includes {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #ebebeb;
+    }
+    .service-includes li {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: #888;
+      line-height: 1.6;
+      list-style: none;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .service-includes li::before {
+      content: '—';
+      position: absolute; left: 0;
+      color: #ccc;
+    }
+    .service-price-block {
+      margin-top: 2.25rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ebebeb;
+    }
+    .service-price-from {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #bbb;
+      margin-bottom: 0.3rem;
+    }
+    .service-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.75rem;
+      font-weight: 300;
+      line-height: 1;
+      color: #111;
+    }
+    .service-price sup {
+      font-size: 1.1rem;
+      vertical-align: super;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      color: #666;
+    }
+    .service-price-note {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: #aaa;
+      margin-top: 0.35rem;
+    }
+    .service-cta {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      margin-top: 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #111;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 1px;
+      transition: border-color 0.3s ease;
+    }
+    .service-cta::after {
+      content: '';
+      display: inline-block; width: 1.25rem; height: 1px; background: #111;
+      transition: width 0.3s ease;
+    }
+    .service-card:hover .service-cta { border-color: #111; }
+    .service-card:hover .service-cta::after { width: 2rem; }
+
+    /* Lessons variant (dual price) */
+    .service-price-dual {
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .service-price-line {
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .service-price-type {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem; font-weight: 300; color: #999;
+      letter-spacing: 0.05em;
+    }
+    .service-price-amt {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem; font-weight: 300; color: #111;
+    }
+    .service-price-amt sup {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; vertical-align: super; color: #666; font-weight: 300;
+    }
+
+    @media (max-width: 860px) {
+      .service-grid { grid-template-columns: 1fr; margin: 0 1.5rem; }
+    }
+
+    /* ── WHATSAPP BUBBLE ───────────────────────────────── */
+    #wa-bubble {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .wa-btn {
+      width: 56px; height: 56px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.35), 0 2px 6px rgba(0,0,0,0.12);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      flex-shrink: 0;
+    }
+    #wa-bubble:hover .wa-btn {
+      transform: scale(1.1);
+      box-shadow: 0 6px 24px rgba(37,211,102,0.45), 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .wa-btn svg { width: 28px; height: 28px; }
+
+    /* Pulse ring */
+    .wa-pulse {
+      position: absolute;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: rgba(37,211,102,0.35);
+      animation: wa-ring 2.2s ease-out infinite;
+    }
+    @keyframes wa-ring {
+      0%   { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(1.85); opacity: 0; }
+    }
+
+    /* Tooltip label */
+    .wa-label {
+      background: #fff;
+      color: #111;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      padding: 0.45rem 0.9rem;
+      border-radius: 4px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(8px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+    #wa-bubble:hover .wa-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ── SOCIAL ICONS ───────────────────────────────────── */
+    .social-icon-row {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .social-icon-link {
+      display: flex; align-items: center; gap: 0.55rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: #555;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .social-icon-link:hover { color: #111; }
+    .social-icon-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ── FOOTER ────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid #e8e8e8;
+      padding: 1.75rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ── MODAL ─────────────────────────────────────────── */
+    #modal {
+      position: fixed; inset: 0; z-index: 300;
+      background: #fff;
+      overflow-y: auto;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    #modal.open { opacity: 1; visibility: visible; }
+
+    #modal-nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 2.5rem;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e8e8e8;
+    }
+    #modal-close {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: #111; background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    #modal-close::before {
+      content: '';
+      display: block; width: 1.25rem; height: 1px; background: #111;
+    }
+    .modal-body { padding: 0 2.5rem 6rem; max-width: 1280px; margin: 0 auto; }
+
+    .modal-title-row {
+      margin-top: 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 3rem;
+    }
+    .modal-title-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #111;
+    }
+    .modal-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-content: start;
+    }
+    .modal-meta-item p:first-child { margin-bottom: 0.25rem; }
+    .modal-meta-val {
+      font-size: 0.85rem; font-weight: 300; color: #555;
+    }
+    .modal-desc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+    .modal-desc-grid p {
+      font-size: 0.88rem; font-weight: 300;
+      line-height: 1.85; color: #555;
+    }
+    .modal-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .modal-gallery-item { overflow: hidden; aspect-ratio: 4/3; background: #f5f5f5; }
+    .modal-gallery-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .modal-gallery-item:hover img { transform: scale(1.05); }
+    .modal-drawings {
+      border: 1px solid #e8e8e8;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .modal-drawings-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: #111;
+      margin-bottom: 0.75rem;
+    }
+    .modal-drawings p {
+      font-size: 0.82rem; font-weight: 300; color: #888;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      #nav { padding: 1.25rem 1.5rem; }
+      .hero-content { padding: 0 1.5rem 2.25rem; }
+      #statement { padding: 5rem 1.5rem; }
+      .sec-header { padding: 1.5rem 1.5rem 2rem; }
+
+      .proj-row { grid-template-columns: 1fr; }
+      .proj-row.flip { direction: ltr; }
+      .proj-img-wrap { aspect-ratio: 16/9; }
+      .proj-info { padding: 1.75rem 1.5rem; }
+
+      .about-grid { grid-template-columns: 1fr; }
+      .about-text { padding: 2.5rem 1.5rem; }
+
+      .contact-grid { grid-template-columns: 1fr; padding: 0 1.5rem; gap: 3rem; }
+
+      footer { padding: 1.5rem 1.5rem; }
+      #modal-nav { padding: 1.25rem 1.5rem; }
+      .modal-body { padding: 0 1.5rem 4rem; }
+      .modal-title-row { grid-template-columns: 1fr; }
+      .modal-desc-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+      .modal-gallery { grid-template-columns: 1fr 1fr; }
+      .menu-link { font-size: clamp(2rem, 12vw, 3.5rem); }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAV
+════════════════════════════════════════════ -->
+<nav id="nav">
+  <a href="#hero" class="wordmark">aitor bal</a>
+
+  <!-- Centre: page links -->
+  <div id="nav-links-wrap" class="nav-links">
+    <a href="#statement" class="nav-link">About</a>
+    <a href="#work"      class="nav-link">Projects</a>
+    <a href="#services"  class="nav-link">Services</a>
+    <a href="#contact"   class="nav-link">Contact</a>
+  </div>
+
+  <!-- Right: social icon shortcuts -->
+  <div style="justify-self:end; display:flex; align-items:center; gap:1.25rem;">
+    <a href="https://www.instagram.com/modelos.3d.archicad/" target="_blank" rel="noopener noreferrer"
+       title="Instagram" style="color:#555; display:flex; align-items:center; transition:color 0.25s ease;"
+       onmouseover="this.style.color='#111'" onmouseout="this.style.color='#555'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      </svg>
+    </a>
+    <a href="https://www.behance.net/aitorbal2" target="_blank" rel="noopener noreferrer"
+       title="Behance" style="color:#555; display:flex; align-items:center; transition:color 0.25s ease;"
+       onmouseover="this.style.color='#111'" onmouseout="this.style.color='#555'">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:17px;height:17px;">
+        <path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 1.2.75 1.84 1.864 1.84.399 0 .74-.09.996-.271zm-5.22-4.4c-.073-.79-.543-1.38-1.44-1.38-.895 0-1.418.6-1.538 1.38h2.978zM7.33 11.364c.697 0 1.143-.426 1.143-1.098 0-.638-.426-1.044-1.143-1.044H5.03v2.142H7.33zm-.313 3.835c.79 0 1.263-.443 1.263-1.18 0-.717-.483-1.151-1.263-1.151H5.03v2.331h1.987zM3 4h5.8c1.776 0 3.157.67 3.157 2.498 0 1.063-.576 1.753-1.43 2.1 1.157.324 1.836 1.13 1.836 2.51C12.363 13.115 11.033 14 9.039 14H3V4z"/>
+      </svg>
+    </a>
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section id="hero">
+
+  <!-- Decorative architectural lines -->
+  <svg class="hero-lines" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Top-left sweep -->
+    <path d="M 60,340 C 120,280 200,220 340,180 C 440,150 520,160 560,120" stroke="#111" stroke-width="0.8" fill="none" opacity="0.13"/>
+    <!-- Top-right arc -->
+    <path d="M 920,100 C 1020,130 1120,90 1200,160 C 1270,220 1300,300 1380,280" stroke="#111" stroke-width="0.8" fill="none" opacity="0.11"/>
+    <!-- Bottom-right curve -->
+    <path d="M 1050,620 C 1130,660 1220,700 1300,750 C 1360,790 1400,820 1430,800" stroke="#111" stroke-width="0.7" fill="none" opacity="0.10"/>
+    <!-- Bottom-centre gentle arc -->
+    <path d="M 600,760 C 680,780 760,790 840,770 C 900,755 940,730 1000,740" stroke="#111" stroke-width="0.7" fill="none" opacity="0.09"/>
+    <!-- Left mid vertical drift -->
+    <path d="M 80,480 C 100,520 90,570 110,620 C 130,670 160,700 140,760" stroke="#111" stroke-width="0.6" fill="none" opacity="0.08"/>
+  </svg>
+
+  <div class="hero-content">
+    <h1 class="hero-title sr" style="transition-delay:0.1s">
+      Aitor<br><em>Bal</em>
+    </h1>
+    <p class="hero-sub sr-fade" style="transition-delay:0.4s">
+      Architect &amp; 3D Specialist &nbsp;·&nbsp; Lisbon, Portugal
+    </p>
+    <span class="line-accent sr-fade" style="transition-delay:0.6s;"></span>
+  </div>
+  <!-- Scroll hint -->
+  <div class="hero-scroll sr-fade" style="transition-delay:0.8s">
+    <div class="hero-scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     STATEMENT
+════════════════════════════════════════════ -->
+<section id="statement">
+  <p class="lbl sr" style="margin-bottom:2rem;">Lisbon, Portugal</p>
+  <p class="statement-text sr" style="transition-delay:0.1s">
+    Architect. Educator.<br><em>3D Specialist.</em>
+  </p>
+  <p class="sr" style="transition-delay:0.2s; margin-top:2.5rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:300; color:#777; line-height:1.8; max-width:520px; margin-left:auto; margin-right:auto;">
+    Aitor Bal designs and documents architectural projects in Lisbon, delivers ready-made
+    3D models and technical drawings, and teaches ArchiCAD from beginner to advanced level —
+    in-person or online.
+  </p>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     SELECTED WORK
+════════════════════════════════════════════ -->
+<section id="work">
+
+  <div class="sec-header sr">
+    <div>
+      <p class="lbl" style="margin-bottom:0.6rem;">Selected Work</p>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,4vw,3.25rem); font-weight:300; line-height:1; letter-spacing:-0.01em; color:#111;">Projects</h2>
+    </div>
+    <span class="lbl">2023 — 2025</span>
+  </div>
+
+  <!-- Asymmetric grid -->
+  <div class="proj-grid">
+
+    <!-- 01 · TABOO — large hero card (7 cols) -->
+    <div class="proj-card c7 sr" onclick="openModal(0)" role="button" tabindex="0" aria-label="TABOO">
+      <span class="proj-ghost-num">01</span>
+      <p class="proj-overlay-name">TABOO</p>
+      <p class="proj-overlay-meta">Residential · Aldeia do Vale, GO · 2025</p>
+      <span class="proj-overlay-cta">View Project</span>
+    </div>
+
+    <!-- 02 · The Falling Cube (5 cols) -->
+    <div class="proj-card c5 sr" style="transition-delay:0.08s" onclick="openModal(1)" role="button" tabindex="0" aria-label="The Falling Cube">
+      <span class="proj-ghost-num">02</span>
+      <p class="proj-overlay-name">The Falling Cube</p>
+      <p class="proj-overlay-meta">Conceptual · 2024</p>
+      <span class="proj-overlay-cta">View Project</span>
+    </div>
+
+    <!-- 03 · Trafaria (5 cols) -->
+    <div class="proj-card c5 sr" style="transition-delay:0.12s" onclick="openModal(2)" role="button" tabindex="0" aria-label="Trafaria">
+      <span class="proj-ghost-num">03</span>
+      <p class="proj-overlay-name">Trafaria</p>
+      <p class="proj-overlay-meta">Urban Regeneration · Lisboa · 2024</p>
+      <span class="proj-overlay-cta">View Project</span>
+    </div>
+
+    <!-- 04 · Passadiços (4 cols) -->
+    <div class="proj-card c4 sr" style="transition-delay:0.06s" onclick="openModal(3)" role="button" tabindex="0" aria-label="Passadiços">
+      <span class="proj-ghost-num">04</span>
+      <p class="proj-overlay-name">Passadiços</p>
+      <p class="proj-overlay-meta">Landscape · Portugal · 2024</p>
+      <span class="proj-overlay-cta">View Project</span>
+    </div>
+
+    <!-- 05 · JOLO Kindergarten (4 cols) -->
+    <div class="proj-card c4 sr" style="transition-delay:0.14s" onclick="openModal(4)" role="button" tabindex="0" aria-label="JOLO Kindergarten">
+      <span class="proj-ghost-num">05</span>
+      <p class="proj-overlay-name">JOLO Kindergarten</p>
+      <p class="proj-overlay-meta">Educational · Lisboa · 2024</p>
+      <span class="proj-overlay-cta">View Project</span>
+    </div>
+
+    <!-- 06 · Cegonha Negra (4 cols) -->
+    <div class="proj-card c4 sr" style="transition-delay:0.22s" onclick="openModal(5)" role="button" tabindex="0" aria-label="Cegonha Negra">
+      <span class="proj-ghost-num">06</span>
+      <p class="proj-overlay-name">Cegonha Negra</p>
+      <p class="proj-overlay-meta">Cultural · Lisboa · 2024</p>
+      <span class="proj-overlay-cta">View Project</span>
+    </div>
+
+  </div>
+
+  <!-- View all -->
+  <div class="sr" style="padding: 3.5rem 2.5rem 0; text-align:center;">
+    <a href="https://www.behance.net/aitorbal2" target="_blank"
+       style="font-family:'DM Sans',sans-serif; font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; color:#111; text-decoration:none; border-bottom:1px solid #ccc; padding-bottom:2px; transition:border-color 0.3s ease;"
+       onmouseover="this.style.borderColor='#111'" onmouseout="this.style.borderColor='#ccc'">
+      View All on Behance ↗
+    </a>
+  </div>
+
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     SERVICES & LESSONS
+════════════════════════════════════════════ -->
+<section id="services">
+  <div class="sec-header sr">
+    <div>
+      <p class="lbl" style="margin-bottom:0.6rem;">What I Offer</p>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,4vw,3.25rem); font-weight:300; line-height:1; letter-spacing:-0.01em; color:#111;">Services &amp; Lessons</h2>
+    </div>
+    <a href="#contact" class="lbl" style="color:#999; text-decoration:none; border-bottom:1px solid #ddd; padding-bottom:2px;">Get a Quote ↓</a>
+  </div>
+
+  <div class="service-grid">
+
+    <!-- 1. ArchiCAD Lessons -->
+    <div class="service-card sr">
+      <p class="service-num">01</p>
+      <h3 class="service-name">ArchiCAD Lessons</h3>
+      <p class="service-desc">
+        Practical ArchiCAD course designed primarily for architecture students — from
+        first principles to advanced parametric workflows. Available in-person or online,
+        individually or in small groups.
+      </p>
+      <ul class="service-includes">
+        <li>3D architectural modelling</li>
+        <li>Isometrics &amp; section cuts</li>
+        <li>Technical drawing production</li>
+        <li>Workflow tips &amp; shortcuts</li>
+        <li>Beginner to Advanced levels</li>
+      </ul>
+      <div class="service-price-block">
+        <p class="service-price-from">Price per hour</p>
+        <div class="service-price-dual">
+          <div class="service-price-line">
+            <span class="service-price-type">Group</span>
+            <span class="service-price-amt"><sup>€</sup>15 <span style="font-size:0.85rem; font-family:'DM Sans',sans-serif; color:#aaa; font-weight:300;">/ person</span></span>
+          </div>
+          <div class="service-price-line">
+            <span class="service-price-type">Private</span>
+            <span class="service-price-amt"><sup>€</sup>25 <span style="font-size:0.85rem; font-family:'DM Sans',sans-serif; color:#aaa; font-weight:300;">/ session</span></span>
+          </div>
+        </div>
+      </div>
+      <a href="#contact" class="service-cta">Book a Lesson</a>
+    </div>
+
+    <!-- 2. Architectural Drawings -->
+    <div class="service-card sr" style="transition-delay:0.1s;">
+      <p class="service-num">02</p>
+      <h3 class="service-name">Architectural Drawings</h3>
+      <p class="service-desc">
+        Ready-made and custom architectural drawings delivered to professional standard.
+        Ideal for students, independent architects, and project teams who need precise
+        technical documentation fast.
+      </p>
+      <ul class="service-includes">
+        <li>Floor plans</li>
+        <li>Sections &amp; elevations</li>
+        <li>Isometrics &amp; axonometrics</li>
+        <li>Constructive details</li>
+        <li>ArchiCAD &amp; PDF delivery</li>
+      </ul>
+      <div class="service-price-block">
+        <p class="service-price-from">Starting from</p>
+        <p class="service-price"><sup>€</sup>80</p>
+        <p class="service-price-note">Price varies by scope and complexity</p>
+      </div>
+      <a href="#contact" class="service-cta">Request a Drawing</a>
+    </div>
+
+    <!-- 3. 3D Models -->
+    <div class="service-card sr" style="transition-delay:0.2s;">
+      <p class="service-num">03</p>
+      <h3 class="service-name">3D Models</h3>
+      <p class="service-desc">
+        High-quality 3D architectural models built in ArchiCAD — ready for rendering,
+        presentation, or further development. Custom models built to your brief, or
+        ready-made models available immediately.
+      </p>
+      <ul class="service-includes">
+        <li>Full 3D architectural model</li>
+        <li>Render-ready geometry</li>
+        <li>ArchiCAD native file</li>
+        <li>Custom or ready-made options</li>
+        <li>Residential, cultural &amp; urban</li>
+      </ul>
+      <div class="service-price-block">
+        <p class="service-price-from">Starting from</p>
+        <p class="service-price"><sup>€</sup>150</p>
+        <p class="service-price-note">Price varies by model complexity</p>
+      </div>
+      <a href="#contact" class="service-cta">Request a Model</a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     ABOUT
+════════════════════════════════════════════ -->
+<section id="about">
+  <div class="sec-header sr">
+    <span class="lbl">The Studio</span>
+  </div>
+
+  <div style="padding: 0 2.5rem;">
+    <!-- Text only -->
+    <div class="about-text sr" style="padding: 0 0 4rem; max-width: 900px;">
+      <div>
+        <h2 class="about-heading">
+          Space as<br><em>experience</em>,<br>not just shelter.
+        </h2>
+        <div class="about-body">
+          <p>
+            Aitor Bal is a Lisbon-based architect and 3D visualization specialist
+            whose practice navigates the boundary between the built and the imagined.
+            With a rigorous command of form, materiality, and light, each project is
+            conceived as a dialogue between site, program, and the lives that will inhabit it.
+          </p>
+          <p>
+            Working across residential, cultural, and urban scales, the studio develops
+            projects from initial concept through technical documentation — leveraging
+            advanced ArchiCAD workflows to deliver precision at every stage.
+          </p>
+          <p>
+            Parallel to the practice, Aitor teaches architectural visualization,
+            passing on a methodology grounded in clarity, efficiency, and craft.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-stats">
+        <div>
+          <p class="stat-num">12+</p>
+          <p class="stat-lbl lbl">Projects</p>
+        </div>
+        <div>
+          <p class="stat-num">3+</p>
+          <p class="stat-lbl lbl">Years</p>
+        </div>
+        <div>
+          <p class="stat-num">PT</p>
+          <p class="stat-lbl lbl">Based</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     CONTACT
+════════════════════════════════════════════ -->
+<section id="contact" style="padding-top:0;">
+  <div class="sec-header sr">
+    <span class="lbl">Get in Touch</span>
+  </div>
+
+  <div class="contact-grid">
+    <!-- Left: info -->
+    <div class="sr">
+      <h2 class="contact-heading">
+        Let's build<br><em>something</em><br>together.
+      </h2>
+
+      <div class="contact-detail">
+        <p class="lbl contact-detail-lbl">Location</p>
+        <p class="contact-detail-val">Lisbon, Portugal</p>
+      </div>
+      <div class="contact-detail">
+        <p class="lbl contact-detail-lbl">Email</p>
+        <p class="contact-detail-val">
+          <a href="mailto:aitor.bal@studio.pt">aitor.bal@studio.pt</a>
+        </p>
+      </div>
+      <div class="contact-detail">
+        <p class="lbl contact-detail-lbl">WhatsApp</p>
+        <p class="contact-detail-val">
+          <a href="https://wa.me/351929162142?text=Olá%20Aitor%2C%20vi%20o%20seu%20portfólio%20e%20gostaria%20de%20saber%20mais."
+             target="_blank" rel="noopener noreferrer"
+             style="color:#25D366; font-size:0.88rem; font-weight:300; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">
+            &#x2B22; Message directly on WhatsApp
+          </a>
+        </p>
+      </div>
+
+      <div class="contact-detail">
+        <p class="lbl contact-detail-lbl">Follow</p>
+        <div class="social-icon-row">
+          <!-- Instagram -->
+          <a href="https://www.instagram.com/modelos.3d.archicad/" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+            @modelos.3d.archicad
+          </a>
+          <!-- Behance -->
+          <a href="https://www.behance.net/aitorbal2" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 1.2.75 1.84 1.864 1.84.399 0 .74-.09.996-.271zm-5.22-4.4c-.073-.79-.543-1.38-1.44-1.38-.895 0-1.418.6-1.538 1.38h2.978zM7.33 11.364c.697 0 1.143-.426 1.143-1.098 0-.638-.426-1.044-1.143-1.044H5.03v2.142H7.33zm-.313 3.835c.79 0 1.263-.443 1.263-1.18 0-.717-.483-1.151-1.263-1.151H5.03v2.331h1.987zM3 4h5.8c1.776 0 3.157.67 3.157 2.498 0 1.063-.576 1.753-1.43 2.1 1.157.324 1.836 1.13 1.836 2.51C12.363 13.115 11.033 14 9.039 14H3V4z"/>
+            </svg>
+            behance.net/aitorbal2
+          </a>
+        </div>
+      </div>
+
+      <div class="blockquote">
+        <p>"Architecture is the learned game,<br>correct and magnificent,<br>of forms assembled in the light."</p>
+        <cite>— Le Corbusier</cite>
+      </div>
+    </div>
+
+    <!-- Right: form -->
+    <div class="sr" style="transition-delay:0.15s">
+      <form id="contact-form" onsubmit="handleSubmit(event)" novalidate>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-field" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-field" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Enquiry</label>
+          <select class="form-field" style="cursor:pointer; color:#111;">
+            <option value="" disabled selected style="color:#bbb;">Select a service…</option>
+            <option>Architecture Project</option>
+            <option>ArchiCAD Lessons — Group (€15/h)</option>
+            <option>ArchiCAD Lessons — Private (€25/h)</option>
+            <option>Architectural Drawings (from €80)</option>
+            <option>3D Model (from €150)</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea class="form-field" rows="4" style="resize:none;" placeholder="Tell me what you need…" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">
+          Send Message
+          <span class="arr"></span>
+        </button>
+      </form>
+      <div id="form-success" style="display:none; margin-top:2rem; padding:2rem; border:1px solid #e8e8e8;">
+        <p class="lbl" style="color:#111; margin-bottom:0.5rem;">Message Sent</p>
+        <p style="font-size:0.85rem; color:#777; font-weight:300;">Thank you — I'll be in touch within 48 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer>
+  <span class="wordmark" style="font-size:0.95rem; opacity:0.5;">aitor bal</span>
+  <span class="lbl" style="color:#bbb;">© 2025 Aitor Bal · Lisbon, Portugal</span>
+  <div style="display:flex; gap:1.75rem; align-items:center;">
+    <a href="https://www.instagram.com/modelos.3d.archicad/" target="_blank" rel="noopener noreferrer"
+       title="Instagram" class="social-icon-link" style="font-size:0.62rem; letter-spacing:0.2em; color:#888;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      </svg>
+      Instagram
+    </a>
+    <a href="https://www.behance.net/aitorbal2" target="_blank" rel="noopener noreferrer"
+       title="Behance" class="social-icon-link" style="font-size:0.62rem; letter-spacing:0.2em; color:#888;">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px;">
+        <path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 1.2.75 1.84 1.864 1.84.399 0 .74-.09.996-.271zm-5.22-4.4c-.073-.79-.543-1.38-1.44-1.38-.895 0-1.418.6-1.538 1.38h2.978zM7.33 11.364c.697 0 1.143-.426 1.143-1.098 0-.638-.426-1.044-1.143-1.044H5.03v2.142H7.33zm-.313 3.835c.79 0 1.263-.443 1.263-1.18 0-.717-.483-1.151-1.263-1.151H5.03v2.331h1.987zM3 4h5.8c1.776 0 3.157.67 3.157 2.498 0 1.063-.576 1.753-1.43 2.1 1.157.324 1.836 1.13 1.836 2.51C12.363 13.115 11.033 14 9.039 14H3V4z"/>
+      </svg>
+      Behance
+    </a>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     WHATSAPP BUBBLE
+     ► Replace +351929162142 with Aitor's real number
+════════════════════════════════════════════ -->
+<a
+  id="wa-bubble"
+  href="https://wa.me/351929162142?text=Olá%20Aitor%2C%20vi%20o%20seu%20portfólio%20e%20gostaria%20de%20saber%20mais."
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Chat on WhatsApp"
+>
+  <!-- Label shown on hover -->
+  <span class="wa-label">Chat on WhatsApp</span>
+
+  <!-- Button + pulse -->
+  <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+    <div class="wa-pulse"></div>
+    <div class="wa-btn">
+      <!-- Official WhatsApp icon -->
+      <svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.001 2C6.478 2 2 6.478 2 12c0 1.77.46 3.435 1.267 4.886L2 22l5.257-1.235A9.957 9.957 0 0 0 12.001 22C17.523 22 22 17.522 22 12S17.523 2 12.001 2zm0 18.182a8.163 8.163 0 0 1-4.163-1.143l-.298-.178-3.12.733.783-2.993-.194-.308A8.182 8.182 0 1 1 12.001 20.182zm4.49-6.13c-.247-.124-1.46-.72-1.687-.803-.226-.082-.39-.124-.555.124-.165.247-.638.803-.783.968-.145.165-.29.185-.537.062-.247-.124-1.044-.385-1.988-1.228-.735-.655-1.232-1.466-1.376-1.713-.144-.247-.016-.38.108-.503.111-.11.247-.289.37-.433.124-.144.165-.247.248-.412.082-.165.04-.309-.021-.433-.062-.124-.555-1.338-.76-1.832-.2-.48-.404-.415-.555-.423l-.474-.008c-.165 0-.433.062-.66.309-.226.247-.864.844-.864 2.058 0 1.214.885 2.387 1.008 2.552.124.165 1.742 2.66 4.222 3.73.59.255 1.05.407 1.408.521.592.189 1.13.162 1.556.098.474-.07 1.46-.597 1.666-1.173.206-.577.206-1.072.144-1.174-.062-.103-.226-.165-.474-.289z"/>
+      </svg>
+    </div>
+  </div>
+</a>
+
+
+<!-- ════════════════════════════════════════════
+     PROJECT MODAL
+════════════════════════════════════════════ -->
+<div id="modal" role="dialog" aria-modal="true">
+  <div id="modal-nav">
+    <span id="modal-proj-num" class="lbl">Project 01</span>
+    <button id="modal-close" onclick="closeModal()">Close</button>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="modal-title-row">
+      <div>
+        <p id="modal-label" class="lbl" style="margin-bottom:1rem;"></p>
+        <h2 id="modal-title" class="modal-title-text"></h2>
+      </div>
+      <div id="modal-meta" class="modal-meta-grid"></div>
+    </div>
+
+    <div class="modal-desc-grid">
+      <p id="modal-desc1"></p>
+      <p id="modal-desc2"></p>
+    </div>
+
+    <div id="modal-gallery" style="display:none;"></div>
+
+    <div class="modal-drawings">
+      <h3 class="modal-drawings-heading">Technical Drawings</h3>
+      <p>Plans, sections, elevations, isometrics, and construction details<br>available upon request.</p>
+      <button class="submit-btn" onclick="closeModal(); document.querySelector('#contact').scrollIntoView({behavior:'smooth'});">
+        Request Drawings <span class="arr"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+// ── Data ──────────────────────────────────────────────
+const PROJECTS = [
+  {
+    num:'01', label:'Aldeia do Vale, GO', title:'TABOO',
+    meta:{ Type:'Residential Resort', Year:'2025', Location:'Aldeia do Vale, GO', Status:'Completed' },
+    hero:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1400&q=85',
+    desc1:'TABOO is an exclusive residential complex designed to integrate seamlessly into the natural landscape of Aldeia do Vale. The project explores the tension between shelter and openness — concrete volumes anchored in terrain, with generous glazing framing curated views of the surrounding hills.',
+    desc2:'The materiality is deliberately restrained: raw concrete, weathered timber, and stone sourced locally. Interiors are conceived as sequences of filtered light — morning sun drawing across polished floors, evening shadows sharpening each room\'s geometry.',
+    gallery:['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&q=80','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=700&q=80','https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=700&q=80','https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=700&q=80','https://images.unsplash.com/photo-1600210492493-0946911123ea?w=700&q=80','https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=700&q=80'],
+  },
+  {
+    num:'02', label:'Conceptual Study', title:'The Falling Cube',
+    meta:{ Type:'Conceptual Architecture', Year:'2024', Location:'Study Project', Status:'Conceptual' },
+    hero:'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1400&q=85',
+    desc1:'A meditation on structural tension and visual paradox. The Falling Cube suspends a massive volume mid-fall — anchored at a single point of contact — questioning assumptions about gravity, stability, and the permanence of built form.',
+    desc2:'The project emerged from an exploration of ArchiCAD\'s parametric capabilities, pushing the software to generate a form that is both technically precise and visually disquieting. Every surface, edge, and shadow is deliberate.',
+    gallery:['https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=80','https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80','https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=700&q=80','https://images.unsplash.com/photo-1481026469463-66327c86e544?w=700&q=80'],
+  },
+  {
+    num:'03', label:'Lisboa, Portugal', title:'Trafaria',
+    meta:{ Type:'Urban Regeneration', Year:'2024', Location:'Trafaria, Lisboa', Status:'Academic' },
+    hero:'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1400&q=85',
+    desc1:'A proposal for the urban requalification of the Trafaria waterfront — a historically significant but neglected edge of Lisbon\'s estuary. The project reimagines the public space as a layered sequence: cultural pavilion, riverside promenade, and community market.',
+    desc2:'The design employs a lightweight structural system of steel and perforated corten panels that filter light while establishing dialogue with the site\'s industrial heritage. Materials were chosen to age gracefully in the tidal environment.',
+    gallery:['https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=700&q=80','https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=700&q=80','https://images.unsplash.com/photo-1536599424071-0b215a388ba7?w=700&q=80'],
+  },
+  {
+    num:'04', label:'Portugal', title:'Passadiços',
+    meta:{ Type:'Landscape Architecture', Year:'2024', Location:'Portugal', Status:'Academic' },
+    hero:'https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?w=1400&q=85',
+    desc1:'A network of elevated timber walkways threading through a sensitive ecological corridor. Passadiços is an exercise in minimum footprint — structures hover above the ground plane, touching earth only at precise points.',
+    desc2:'The experience of traversal becomes the architecture: the pace set by the walkway, views framed by its angle, the sound of timber underfoot. A project about movement, threshold, and the poetic encounter with landscape.',
+    gallery:['https://images.unsplash.com/photo-1501854140801-50d01698950b?w=700&q=80','https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=700&q=80','https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=700&q=80'],
+  },
+  {
+    num:'05', label:'Lisboa, Portugal', title:'JOLO Kindergarten',
+    meta:{ Type:'Educational', Year:'2024', Location:'Lisboa, Portugal', Status:'Conceptual' },
+    hero:'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1400&q=85',
+    desc1:'JOLO is a kindergarten conceived around the developmental needs of early childhood. The building is organized as pavilions arranged around a protected central garden — each classroom oriented to maximise morning light.',
+    desc2:'The scale is deliberately domestic: low eaves, timber cladding, and generous windows at child height create a building that feels safe, warm, and full of wonder. Every material choice was made with tactile experience in mind.',
+    gallery:['https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=80','https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=700&q=80','https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=700&q=80'],
+  },
+  {
+    num:'06', label:'Lisboa, Portugal', title:'Cegonha Negra',
+    meta:{ Type:'Cultural / Museum', Year:'2024', Location:'Lisboa, Portugal', Status:'Academic' },
+    hero:'https://images.unsplash.com/photo-1555952517-2e8e729e0b44?w=1400&q=85',
+    desc1:'A contemporary arts museum sited at a threshold in Lisbon\'s urban fabric. Cegonha Negra (Black Stork) takes its name from the migratory patterns of the site — a building that feels like it has landed, temporary yet commanding.',
+    desc2:'The black zinc cladding absorbs and reflects the shifting Lisbon sky. Inside, galleries of varying height suit different scales of art — from intimate drawings to monumental installations — united by a consistent quality of indirect light.',
+    gallery:['https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=700&q=80','https://images.unsplash.com/photo-1561201423-5e04b89ea6f3?w=700&q=80','https://images.unsplash.com/photo-1549931319-a545dcf3bc7c?w=700&q=80'],
+  },
+];
+
+// ── Modal ─────────────────────────────────────────────
+function openModal(idx) {
+  const p = PROJECTS[idx];
+  document.getElementById('modal-proj-num').textContent = `Project ${p.num}`;
+  document.getElementById('modal-label').textContent = p.label;
+  document.getElementById('modal-title').textContent = p.title;
+  document.getElementById('modal-desc1').textContent = p.desc1;
+  document.getElementById('modal-desc2').textContent = p.desc2;
+
+  document.getElementById('modal-meta').innerHTML = Object.entries(p.meta).map(([k,v]) => `
+    <div class="modal-meta-item">
+      <p class="lbl" style="margin-bottom:0.3rem;">${k}</p>
+      <p class="modal-meta-val">${v}</p>
+    </div>
+  `).join('');
+
+  document.getElementById('modal-gallery').innerHTML = p.gallery.map(src => `
+    <div class="modal-gallery-item">
+      <img src="${src}" alt="${p.title}" loading="lazy">
+    </div>
+  `).join('');
+
+  const modal = document.getElementById('modal');
+  modal.classList.add('open');
+  modal.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.querySelectorAll('.proj-row').forEach(r => {
+  r.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') r.click(); });
+});
+
+// ── Mobile: simple toggle for narrow screens ──────────
+// (nav links hidden on <640px — link via wordmark only)
+
+// ── Navbar hide-on-scroll-down ────────────────────────
+let lastScroll = 0;
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  nav.classList.toggle('bg-solid', y > 80);
+  nav.classList.toggle('hidden-up', y > lastScroll + 8 && y > 300);
+  if (y < lastScroll - 4 || y < 80) nav.classList.remove('hidden-up');
+  lastScroll = y;
+}, { passive: true });
+
+// ── Scroll reveal ─────────────────────────────────────
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.sr, .sr-fade').forEach(el => io.observe(el));
+// Hero fires immediately
+requestAnimationFrame(() => setTimeout(() => {
+  document.querySelectorAll('#hero .sr, #hero .sr-fade').forEach(el => el.classList.add('in'));
+}, 60));
+
+// ── Form ──────────────────────────────────────────────
+function handleSubmit(e) {
+  e.preventDefault();
+  const form = document.getElementById('contact-form');
+  form.style.transition = 'opacity 0.4s';
+  form.style.opacity = '0';
+  form.style.pointerEvents = 'none';
+  setTimeout(() => {
+    form.style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }, 400);
+}
+</script>
+
+</body>
+</html>
